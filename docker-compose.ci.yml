@@ -1,4 +1,4 @@
-version: '3'
+version: '2'
 services:
   app:
     extends:
@@ -13,7 +13,7 @@ services:
     extends:
       file: docker-compose.base.yml
       service: node
-    working_dir: /var/www/html 
+    working_dir: /var/www/html
 networks:
   appnet:
     driver: bridge
