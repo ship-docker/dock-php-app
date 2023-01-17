@@ -1,8 +1,8 @@
 #!/usr/bin/env groovy
 
-node('master') {
+node {
     stage('build') {
-        git url: 'git@github.com:shipping-docker/shippingdocker.com.git'
+        git url: 'git@github.com:ship-docker/dock-php-app.git'
 
         // Start services (Let docker-compose build containers for testing)
         sh "./develop up -d"
