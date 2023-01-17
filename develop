@@ -1,6 +1,16 @@
 #!/usr/bin/env bash
 
 # Set environment variables for dev
+# Change settings for CI
+if [ ! -z "$BUILD_NUMBER" ]; then
+    # We need the full path here because /sbin is not in user Jenkin's $PATH
+    export XDEBUG_HOST=$(/sbin/ifconfig docker0 | grep "inet addr" | cut -d ':' -f 2 | cut -d ' ' -f 1)
+else
+    export XDEBUG_HOST=$(ipconfig getifaddr en1)
+fi
+
+# Set environment variables for dev
+export CONTAINER_ENV=${CONTAINER_ENV:-local}
 export APP_ENV=${APP_ENV:-local}
 export APP_PORT=${APP_PORT:-8080}
 export DB_PORT=${DB_PORT:-33060}
