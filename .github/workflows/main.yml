@@ -17,7 +17,7 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  the-work:
+  build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -46,7 +46,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+          aws-region: eu-central-1
     
       - name: Start Environment
         run: ./develop up -d
@@ -55,7 +55,7 @@ jobs:
         run: ./develop composer install
 
       - name: Get CI env file
-        run: aws s3 cp s3://shippingdocker-secrets/env-ci .env
+        run: aws s3 cp s3://myshippingdocker-secrets/env-ci .env
       
       - name: Setup Laravel
         run: ./develop art key:generate && ./develop art passport:keys
