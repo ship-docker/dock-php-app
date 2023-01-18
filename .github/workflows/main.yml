@@ -2,7 +2,7 @@
 
 name: CI
 
-# Controls when the action will run. 
+# Controls when the action will run.
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
   push:
@@ -25,7 +25,7 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-      
+
       # See: https://github.com/actions/cache
       # Cache Composer Dependencies
       - name: Get Composer Cache Directory
@@ -38,7 +38,7 @@ jobs:
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
             ${{ runner.os }}-composer-
-    
+
       # See: https://github.com/aws-actions/configure-aws-credentials
       # Setup AWS environment variables from GitHub secrets
       - name: Configure AWS Credentials
@@ -47,7 +47,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-central-1
-    
+
       - name: Start Environment
         run: ./develop up -d
 
@@ -56,10 +56,23 @@ jobs:
 
       - name: Get CI env file
         run: aws s3 cp s3://myshippingdocker-secrets/env-ci .env
-      
+
       - name: Setup Laravel
         run: ./develop art key:generate
 
       - name: Run tests
         run: APP_ENV=testing ./develop test
 
+      # Other ways to conditionally run prod steps:
+      # https://stackoverflow.com/questions/58139406/only-run-job-on-specific-branch-with-github-actions
+      - name: Generate Registry Configuration
+        run: ./docker/build-registry-config ${{ secrets.AWS_ACCESS_KEY_ID }} ${{ secrets.AWS_SECRET_ACCESS_KEY }} ${{ secrets.REGISTRY_BUCKET }}
+        if: github.ref == 'refs/heads/master'
+
+      - name: Start Docker Private Registry
+        run: docker run -d -p 5000:5000 -v $(pwd)/docker/registry-config.yml:/etc/docker/registry/config.yml registry:2
+        if: github.ref == 'refs/heads/master'
+
+      - name: Build and push production image
+        run: ./docker/build
+        if: github.ref == 'refs/heads/master'
