@@ -58,7 +58,7 @@ jobs:
         run: aws s3 cp s3://myshippingdocker-secrets/env-ci .env
       
       - name: Setup Laravel
-        run: ./develop art key:generate && ./develop art passport:keys
+        run: ./develop art key:generate
 
       - name: Run tests
         run: APP_ENV=testing ./develop test
