@@ -21,9 +21,21 @@ node {
         stage('test') {
             sh "APP_ENV=testing ./develop test"
         }
+
+        if( env.BRANCH_NAME == 'master' ) {
+            stage('package') {
+                sh './docker/build'
+            }
+
+            stage('deploy') {
+                # Enter your own IP-address in here.
+                # sh 'ssh -i ~/.ssh/id_sd ubuntu@172.31.52.48 /opt/deploy'
+            }
+        }
+
     } catch(error) {
     // Maybe some alerting?
-    throw error
+        throw error
     } finally {
         // Spin down containers no matter what happens
         sh './develop down'
