@@ -17,7 +17,7 @@ RUN apt-get update \
        php7.2-imap php7.2-mysql php7.2-mbstring \
        php7.2-xml php7.2-zip php7.2-bcmath php7.2-soap \
        php7.2-intl php7.2-readline php7.2-xdebug \
-       php-msgpack php-igbinary \
+       php-msgpack php-igbinary php-redis\
     && php -r "readfile('http://getcomposer.org/installer');" | php -- --install-dir=/usr/bin/ --filename=composer \
     && mkdir /run/php \
     && apt-get -y autoremove \
