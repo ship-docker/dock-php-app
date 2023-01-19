@@ -28,6 +28,8 @@ aws s3 cp s3://myshippingdocker-secrets/env-prod .env
 # aws s3 cp s3://myshippingdocker-secrets/oauth-private.key storage/oauth-private.key
 # aws s3 cp s3://myshippingdocker-secrets/oauth-public.key storage/oauth-public.key
 
+./develop art key:generate
+
 # Build the Docker image with latest code
 cd $DIR/app
 docker build \
