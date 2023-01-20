@@ -124,8 +124,17 @@ return [
         'options' => [
             'cluster' => env('REDIS_CLUSTER', 'redis'),
             'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_database_'),
+            'parameters' => [ // Parameters provide defaults for the Connection Factory
+                'password' => env('REDIS_PASSWORD', null), // Redirects need PW for the other nodes
+                'scheme'   => env('REDIS_SCHEME', 'tcp'),  // Redirects also must match scheme
+            ],
+            'ssl'    => ['verify_peer' => false], // Since we dont have TLS cert to verify
         ],
 
+        // Note! for single redis nodes, the default is defined here.
+        // keeping it here for clusters will actually prevent the cluster config
+        // from being used, it'll assume single node only.
+        /*
         'default' => [
             'url' => env('REDIS_URL'),
             'host' => env('REDIS_HOST', '127.0.0.1'),
@@ -141,9 +150,10 @@ return [
             'port' => env('REDIS_PORT', '6379'),
             'database' => env('REDIS_CACHE_DB', '1'),
         ],
+        */
 
         'cluster' => env('REDIS_CLUSTER_ENABLED', false),
-
+        // #pro-tip, you can use the Cluster config even for single instances!
         'clusters' => [
             'default' => [
                 [ # cluster suppose multiple hosts in it, so wrapping each host in cluster into array make sense
