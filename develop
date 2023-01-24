@@ -39,7 +39,7 @@ if [ ! -z "$BUILD_NUMBER" ] || [ ! -z "$GITHUB_RUN_NUMBER" ]; then
 fi
 
 # Create docker-compose command to run
-COMPOSE="docker-compose -f docker-compose.${COMPOSE_FILE}.yml"
+COMPOSE="docker-compose -f docker-compose.base.yml -f docker-compose.${COMPOSE_FILE}.yml"
 
 if [ $# -gt 0 ]; then
 
