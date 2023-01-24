@@ -10,3 +10,5 @@ networks:
 volumes:
   cachedata:
     driver: local
+  dbdata:
+    driver: local
